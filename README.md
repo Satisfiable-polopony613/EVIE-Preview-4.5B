@@ -114,8 +114,10 @@ Calling `enable_bidirectional_attention()` and clearing `rope_deltas` before a q
 ## Reproducing
 
 ```bash
-python reproduce.py --model EVIE-Preview-4.5B --data-root /path/to/vidore
+bash reproduce.sh /path/to/vidore
 ```
+
+Runs on every visible GPU and writes a timestamped log. It prints one line per task and ends with the four aggregates:
 
 ```
 ViDoRe V1        nDCG@5    91.72  (10 tasks)
@@ -124,7 +126,7 @@ ViDoRe V1+V2     nDCG@5    85.93  (14 tasks)
 ViDoRe V3 public nDCG@10   64.40  (8 domains x 6 languages)
 ```
 
-The expected dataset layout is documented at the top of the script. A full run takes about an hour on one 96 GB GPU.
+The expected dataset layout is documented at the top of [`reproduce.py`](reproduce.py).
 
 ## Training data
 

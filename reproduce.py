@@ -18,11 +18,13 @@ import glob
 import io
 import json
 import math
+import os
 from collections import defaultdict
 from pathlib import Path
 
 import pyarrow.parquet as pq
 import torch
+import torch.distributed as dist
 import torch.nn.functional as F
 from PIL import Image
 
@@ -189,13 +191,30 @@ def eval_beir(model, processor, corpus: Path, queries: Path, qrels: Path, batch:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--model", default="EVIE-Preview-4.5B")
-    ap.add_argument("--data-root", required=True)
+    here = Path(__file__).resolve().parent
+    ap.add_argument("--model", default=str(here))
+    ap.add_argument("--data-root", default=str(here / "vidore"))
     ap.add_argument("--max-visual-tokens", type=int, default=768)
     ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--attn", default="flash_attention_2")
+    ap.add_argument("--boards", default="v1,v2,v3", help="subset of v1,v2,v3 to run")
     ap.add_argument("--output", default="")
     args = ap.parse_args()
+
+    boards = {b.strip().lower() for b in args.boards.split(",") if b.strip()}
+    unknown = boards - {"v1", "v2", "v3"}
+    if unknown:
+        ap.error("unknown board(s): %s" % sorted(unknown))
+
+    rank, world = 0, 1
+    if os.environ.get("WORLD_SIZE"):
+        dist.init_process_group("nccl")
+        rank, world = dist.get_rank(), dist.get_world_size()
+    torch.cuda.set_device(int(os.environ.get("LOCAL_RANK", 0)))
+
+    def mine(items):
+        """Shard whole tasks across ranks; V3 shards by domain so each corpus is encoded once."""
+        return [x for i, x in enumerate(items) if i % world == rank]
 
     root = Path(args.data_root)
     processor = ColQwen3_5Processor.from_pretrained(
@@ -208,18 +227,18 @@ def main() -> int:
     model = model.to("cuda").eval()
 
     result, cache = {}, {}
-    for task in V1:
+    for task in mine(V1) if "v1" in boards else []:
         result["V1/" + task] = eval_qa(model, processor, root / "eval" / task, args.batch, 5)
         print("V1  %-46s nDCG@5  %6.2f" % (task, 100 * result["V1/" + task]), flush=True)
 
-    for task in V2:
+    for task in mine(V2) if "v2" in boards else []:
         base = root / "eval_v2" / task
         result["V2/" + task] = eval_beir(
             model, processor, base / "corpus", base / "queries", base / "qrels", args.batch, 5, cache
         )
         print("V2  %-46s nDCG@5  %6.2f" % (task, 100 * result["V2/" + task]), flush=True)
 
-    for domain in V3:
+    for domain in mine(V3) if "v3" in boards else []:
         base = root / "eval_v3" / domain
         for language in V3_LANGS:
             result["V3/%s/%s" % (domain, language)] = eval_beir(
@@ -229,16 +248,30 @@ def main() -> int:
         scores = [result["V3/%s/%s" % (domain, l)] for l in V3_LANGS]
         print("V3  %-46s nDCG@10 %6.2f" % (domain, 100 * sum(scores) / len(scores)), flush=True)
 
+    if world > 1:
+        gathered = [None] * world
+        dist.all_gather_object(gathered, result)
+        result = {k: v for part in gathered for k, v in part.items()}
+
     def mean(prefix):
         picked = [v for k, v in result.items() if k.startswith(prefix)]
-        return sum(picked) / len(picked)
+        return sum(picked) / len(picked) if picked else None
 
     v1, v2, v3 = mean("V1/"), mean("V2/"), mean("V3/")
-    combined = (10 * v1 + 4 * v2) / 14
-    print("\nViDoRe V1        nDCG@5   %6.2f  (10 tasks)" % (100 * v1))
-    print("ViDoRe V2        nDCG@5   %6.2f  (4 tasks)" % (100 * v2))
-    print("ViDoRe V1+V2     nDCG@5   %6.2f  (14 tasks)" % (100 * combined))
-    print("ViDoRe V3 public nDCG@10  %6.2f  (8 domains x 6 languages)" % (100 * v3))
+    combined = (10 * v1 + 4 * v2) / 14 if None not in (v1, v2) else None
+    if rank != 0:
+        dist.destroy_process_group()
+        return 0
+
+    print()
+    for line, value in (
+        ("ViDoRe V1        nDCG@5   %6.2f  (10 tasks)", v1),
+        ("ViDoRe V2        nDCG@5   %6.2f  (4 tasks)", v2),
+        ("ViDoRe V1+V2     nDCG@5   %6.2f  (14 tasks)", combined),
+        ("ViDoRe V3 public nDCG@10  %6.2f  (8 domains x 6 languages)", v3),
+    ):
+        if value is not None:
+            print(line % (100 * value))
 
     if args.output:
         Path(args.output).write_text(json.dumps(
@@ -247,6 +280,8 @@ def main() -> int:
              "average": {"v1_ndcg@5": v1, "v2_ndcg@5": v2, "v1v2_ndcg@5": combined,
                          "v3_public_ndcg@10": v3}},
             ensure_ascii=False, indent=2) + "\n")
+    if world > 1:
+        dist.destroy_process_group()
     return 0
 
 
