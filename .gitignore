@@ -4,3 +4,4 @@ __pycache__/
 local.env
 results.json
 reproduce_*.log
+vidore/

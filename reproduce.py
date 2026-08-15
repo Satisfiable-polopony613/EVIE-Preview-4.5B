@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 """Reproduce the ViDoRe V1 / V2 / V3 numbers reported in the model card.
 
-Expects the released ViDoRe datasets on disk, one directory per board:
-
-    <data-root>/eval/<task>/data/*.parquet                  ViDoRe V1, QA format
-    <data-root>/eval_v2/<task>/{corpus,queries,qrels}/*.parquet
-    <data-root>/eval_v3/<domain>/<language>-{corpus,queries,qrels}/*.parquet
+Reads the datasets as published on the Hub, one directory per repository under
+--data-root, as produced by download_data.py.
 
 V1 follows the official QA protocol: every page of a dataset is a candidate and
 queries are deduplicated. V2 and V3 use the released qrels, including graded
-relevance. V3 averages the six query languages within each domain; the six
-language corpora are identical, so each domain is encoded once.
+relevance. V3 averages the six query languages within each domain; a domain has
+one corpus, so it is encoded once and reused across its languages.
 """
 
 import argparse
@@ -43,17 +40,29 @@ V1 = [
     "tabfquad_test_subsampled",
     "tatdqa_test",
 ]
-V2 = ["biomedical_lectures", "economics_reports", "esg_reports", "esg_reports_human_labeled"]
+V2 = ["biomedical_lectures_v2", "economics_reports_v2", "esg_reports_v2",
+      "esg_reports_human_labeled_v2"]
 V3 = ["computer_science", "energy", "finance_en", "finance_fr", "hr", "industrial",
       "pharmaceuticals", "physics"]
 V3_LANGS = ["english", "french", "german", "italian", "portuguese", "spanish"]
-META = ("image_filename", "query", "corpus-id", "id")
+META = ("image_filename", "query", "corpus-id", "corpus_id", "id")
+CORPUS_ID = ("corpus-id", "corpus_id", "id")
+QUERY_ID = ("query-id", "query_id", "id")
 
 
 def parquets(directory: Path) -> list[str]:
     found = sorted(glob.glob(str(directory / "*.parquet")))
     test = [f for f in found if Path(f).name.startswith("test-")]
     return test or found
+
+
+def dataset_dir(root: Path, board: str, name: str) -> Path:
+    """Datasets live at <root>/<repo name>; a <root>/<board>/<short name> tree also works."""
+    short = name.removesuffix("_v2").removeprefix("vidore_v3_")
+    for candidate in (root / name, root / board / short, root / board / name):
+        if candidate.is_dir():
+            return candidate
+    raise FileNotFoundError("%s: download it into %s" % (name, root))
 
 
 def text_rows(paths):
@@ -132,6 +141,13 @@ def ndcg(order, gains: dict, k: int) -> float:
     return dcg / best if best else 0.0
 
 
+def ident(record, keys) -> str:
+    for key in keys:
+        if record.get(key) is not None:
+            return str(record[key])
+    raise KeyError(keys)
+
+
 def text_of(record) -> str:
     value = record.get("text", record.get("query"))
     value = "" if value is None else str(value).strip()
@@ -162,24 +178,26 @@ def eval_qa(model, processor, directory: Path, batch: int, k: int) -> float:
 
 
 def eval_beir(model, processor, corpus: Path, queries: Path, qrels: Path, batch: int, k: int,
-              cache: dict) -> float:
+              cache: dict, language: str = "") -> float:
     if str(corpus) not in cache:
         cache.clear()
         docs, metadata = embed_images(model, processor, parquets(corpus), batch)
-        index = {str(m.get("corpus-id") or m.get("id")): i for i, m in enumerate(metadata)}
+        index = {ident(m, CORPUS_ID): i for i, m in enumerate(metadata)}
         cache[str(corpus)] = (docs, index)
     docs, index = cache[str(corpus)]
 
     gains = defaultdict(dict)
     for record in text_rows(parquets(qrels)):
-        doc = index.get(str(record.get("corpus-id") or record.get("id")))
+        doc = index.get(ident(record, CORPUS_ID))
         relevance = float(record.get("score") or 0.0)
         if doc is not None and relevance > 0:
-            gains[str(record.get("query-id") or record.get("id"))][doc] = relevance
+            gains[ident(record, QUERY_ID)][doc] = relevance
 
     texts, ids = [], []
     for record in text_rows(parquets(queries)):
-        key = str(record.get("id") or record.get("query-id"))
+        if language and record.get("language") != language:
+            continue
+        key = ident(record, QUERY_ID)
         if text_of(record) and gains.get(key):
             texts.append(text_of(record))
             ids.append(key)
@@ -228,22 +246,26 @@ def main() -> int:
 
     result, cache = {}, {}
     for task in mine(V1) if "v1" in boards else []:
-        result["V1/" + task] = eval_qa(model, processor, root / "eval" / task, args.batch, 5)
+        result["V1/" + task] = eval_qa(model, processor, dataset_dir(root, "eval", task), args.batch, 5)
         print("V1  %-46s nDCG@5  %6.2f" % (task, 100 * result["V1/" + task]), flush=True)
 
     for task in mine(V2) if "v2" in boards else []:
-        base = root / "eval_v2" / task
+        base = dataset_dir(root, "eval_v2", task)
         result["V2/" + task] = eval_beir(
             model, processor, base / "corpus", base / "queries", base / "qrels", args.batch, 5, cache
         )
         print("V2  %-46s nDCG@5  %6.2f" % (task, 100 * result["V2/" + task]), flush=True)
 
     for domain in mine(V3) if "v3" in boards else []:
-        base = root / "eval_v3" / domain
+        base = dataset_dir(root, "eval_v3", "vidore_v3_" + domain)
+        legacy = (base / (V3_LANGS[0] + "-corpus")).is_dir()
         for language in V3_LANGS:
+            corpus = base / (V3_LANGS[0] + "-corpus") if legacy else base / "corpus"
+            queries = base / (language + "-queries") if legacy else base / "queries"
+            qrels = base / (language + "-qrels") if legacy else base / "qrels"
             result["V3/%s/%s" % (domain, language)] = eval_beir(
-                model, processor, base / (V3_LANGS[0] + "-corpus"),
-                base / (language + "-queries"), base / (language + "-qrels"), args.batch, 10, cache
+                model, processor, corpus, queries, qrels, args.batch, 10, cache,
+                language="" if legacy else language,
             )
         scores = [result["V3/%s/%s" % (domain, l)] for l in V3_LANGS]
         print("V3  %-46s nDCG@10 %6.2f" % (domain, 100 * sum(scores) / len(scores)), flush=True)

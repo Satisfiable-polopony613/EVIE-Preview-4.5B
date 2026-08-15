@@ -13,10 +13,9 @@ cd "$(dirname "$0")"
 PYTHON="${PYTHON:-python3}"
 DATA="${1:-${VIDORE_DATA:-./vidore}}"
 
-if [[ ! -d "$DATA/eval" ]]; then
-  echo "ViDoRe data not found at: $DATA" >&2
-  echo "usage: bash reproduce.sh /path/to/vidore" >&2
-  exit 1
+if [[ ! -d "$DATA" ]]; then
+  echo "downloading the ViDoRe datasets into $DATA"
+  "$PYTHON" download_data.py --out "$DATA"
 fi
 
 GPUS="$("$PYTHON" -c 'import torch; print(torch.cuda.device_count())')"
