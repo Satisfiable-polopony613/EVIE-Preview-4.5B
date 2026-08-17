@@ -6,7 +6,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Base Model](https://img.shields.io/badge/Base%20Model-Qwen3.5--4B-purple.svg)](https://huggingface.co/Qwen/Qwen3.5-4B)
-[![Embedding Dim](https://img.shields.io/badge/Token%20Dim-128%20(Native)-success.svg)](#footprint)
+[![Embedding Dim](https://img.shields.io/badge/Token%20Dim-128%20(Native)-success.svg)](#model-footprint)
 [![ViDoRe V3](https://img.shields.io/badge/ViDoRe%20V3-64.40%20(Rank%20%231)-gold.svg)](#vidore-v3-8-public-domains-ndcg10)
 [![Framework](https://img.shields.io/badge/Framework-ColPali--Engine-orange.svg)](https://github.com/illuin-tech/colpali)
 
@@ -20,9 +20,9 @@
 
 **EVIE Preview 4.5B** is a high-performance multilingual Visual Document Retrieval (VDR) model built upon **Qwen3.5-4B**. It employs ColBERT-style late interaction with native **128-dimensional** token embeddings (4.54B parameters, BF16).
 
-By combining native GatedDeltaNet + full-attention hybrid modeling with compact projection design, EVIE achieves top-tier performance across both ViDoRe V1+V2 and ViDoRe V3 benchmarks—while reducing vector index footprint by **up to 32×** compared to standard dense VLM retrievers.
+By combining native GatedDeltaNet + full-attention hybrid modeling with a compact projection, EVIE achieves top-tier performance across ViDoRe V1+V2 and ViDoRe V3 while producing native 128-dimensional multi-vector representations instead of the 2560D–4096D representations used by wider multi-vector alternatives.
 
-> **Note**: This is a preview release published while the next iteration of EVIE is training.
+> **Note**: This is a preview release. The next iteration of EVIE is pending release.
 
 ### Key Highlights
 
@@ -35,7 +35,7 @@ By combining native GatedDeltaNet + full-attention hybrid modeling with compact 
 
 ## Benchmark Results
 
-### Footprint & Efficiency Comparison
+### Model Footprint
 
 | Model | Parameters | Token Embedding Dim |
 | :--- | :---: | :---: |
@@ -104,30 +104,26 @@ from colpali_engine.models import ColQwen3_5, ColQwen3_5Processor
 
 model_id = "EVIE-Preview-4.5B"
 
-# 1. Load model and processor
 model = ColQwen3_5.from_pretrained(
     model_id,
     torch_dtype=torch.bfloat16,
     device_map="cuda",
-    attn_implementation="sdpa",  # or "flash_attention_2"
+    attn_implementation="flash_attention_2",
 ).eval()
 
-# 2. Enable bidirectional attention (Required)
 model.enable_bidirectional_attention()
 
 processor = ColQwen3_5Processor.from_pretrained(model_id)
 
-# 3. Prepare inputs
 images = [Image.open("document_page.png")]
 queries = ["What key insights are presented on this page?"]
 
 image_batch = processor.process_images(images).to(model.device)
 query_batch = processor.process_queries(queries).to(model.device)
 
-# 4. Compute embeddings and similarity score
 with torch.inference_mode():
     image_embeddings = model(**image_batch)
-    model.rope_deltas = None  # Reset RoPE deltas before query pass
+    model.rope_deltas = None
     query_embeddings = model(**query_batch)
 
 scores = processor.score(query_embeddings, image_embeddings)

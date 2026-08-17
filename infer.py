@@ -11,7 +11,10 @@ from colpali_engine.models import ColQwen3_5, ColQwen3_5Processor
 
 def load(model_id: str, device: str = "cuda"):
     model = ColQwen3_5.from_pretrained(
-        model_id, torch_dtype=torch.bfloat16, device_map=device, attn_implementation="sdpa"
+        model_id,
+        torch_dtype=torch.bfloat16,
+        device_map=device,
+        attn_implementation="flash_attention_2",
     ).eval()
     model.enable_bidirectional_attention()
     return model, ColQwen3_5Processor.from_pretrained(model_id)
