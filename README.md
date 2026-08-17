@@ -56,13 +56,13 @@ inference: false
 
 **EVIE-Preview-4.5B** is a state-of-the-art multilingual Visual Document Retrieval (VDR) model built upon **Qwen3.5-4B**. It employs ColBERT-style late interaction with native **128-dimensional** multi-vector token embeddings (4.54B parameters, BF16).
 
-By combining native GatedDeltaNet linear-attention and full-attention hybrid modeling with a compact visual projection, EVIE achieves top-tier performance across ViDoRe V1+V2 and ViDoRe V3 while generating ultra-compact 128D multi-vectors—cutting vector storage and indexing costs by **8× to 32×** compared to wider 2560D–4096D representations.
+By combining native GatedDeltaNet linear-attention and full-attention hybrid modeling with a compact visual projection, EVIE achieves top-tier performance across ViDoRe V1+V2 and ViDoRe V3 while generating compact 128D multi-vector representations.
 
 > **Note**: This is a preview release. The next iteration of EVIE is pending release.
 
 ### Key Highlights
 
-- **🎯 Ultra-Compact 128D Index**: Native 128-dimensional multi-vector representations drastically shrink downstream storage and index latency without sacrifice in retrieval precision.
+- **🎯 Ultra-Compact 128D Token Vectors**: Native 128-dimensional multi-vector representations keep each token vector narrow while preserving strong retrieval quality.
 - **🏆 SOTA on ViDoRe Benchmarks**: Outperforms larger 8B models on ViDoRe V3 (leading **7 of 8** public domains) and delivers top average accuracy on ViDoRe V1+V2 (**85.93** nDCG@5).
 - **🌐 Robust Multilingual & Multi-Format**: Strong zero-shot generalization across diverse languages (EN, FR, DE, IT, ES, PT, ZH, etc.) and visual formats (charts, tables, scientific reports, financial filings).
 - **⚡ Seamless ColPali Compatibility**: Fully integrated with the standard `colpali-engine` ecosystem and late-interaction scoring pipelines.
@@ -89,14 +89,16 @@ Document Image ─────► ColQwen3_5 (Dynamic Vision) ──► Doc Toke
 
 ### Model Footprint
 
-| Model | Parameters | Token Embedding Dim | Relative Index Size |
+| Model | Representation | Native Uncompressed Dim / Vector | Relative Width / Vector |
 | :--- | :---: | :---: | :---: |
-| **EVIE-Preview-4.5B** | **4.54B** | **128** | **1.0× (Baseline)** |
-| [colqwen3.5-4.5B-v3](https://huggingface.co/athrael-soju/colqwen3.5-4.5B-v3) | 4.60B | 320 | 2.5× |
-| [jina-embeddings-v4](https://huggingface.co/jinaai/jina-embeddings-v4) | 3.90B | 2048 (128 multi-vec) | 16.0× |
-| [nemotron-colembed-vl-4b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-4b-v2) | 4.80B | 2560 | 20.0× |
-| [llama-nemotron-colembed-vl-3b-v2](https://huggingface.co/nvidia/llama-nemotron-colembed-vl-3b-v2) | 4.40B | 3072 | 24.0× |
-| [nemotron-colembed-vl-8b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-8b-v2) | 8.77B | 4096 | 32.0× |
+| **EVIE-Preview-4.5B** | Multi-vector | **128** | **1.0×** |
+| [colqwen3.5-4.5B-v3](https://huggingface.co/athrael-soju/colqwen3.5-4.5B-v3) | Multi-vector | 320 | 2.5× |
+| [jina-embeddings-v4](https://huggingface.co/jinaai/jina-embeddings-v4) | Multi-vector | 128 | 1.0× |
+| [nemotron-colembed-vl-4b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-4b-v2) | Multi-vector | 2560 | 20× |
+| [llama-nemotron-colembed-vl-3b-v2](https://huggingface.co/nvidia/llama-nemotron-colembed-vl-3b-v2) | Multi-vector | 3072 | 24× |
+| [nemotron-colembed-vl-8b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-8b-v2) | Multi-vector | 4096 | 32× |
+
+*Relative width compares the native uncompressed width of one token vector with EVIE's 128D output. It is not a total index-size comparison: total storage also depends on vectors per page, data precision, projection or compression settings, and index overhead. NVIDIA ColEmbed models also support 128D projected outputs, while Jina v4 separately supports a 2048D single-vector mode.*
 
 ---
 
