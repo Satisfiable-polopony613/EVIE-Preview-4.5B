@@ -57,14 +57,14 @@ By combining native GatedDeltaNet + full-attention hybrid modeling with compact 
 
 ### Footprint & Efficiency Comparison
 
-| Model | Parameters | Token Embedding Dim | Relative Index Size |
-| :--- | :---: | :---: | :---: |
-| **EVIE Preview 4.5B** | **4.54B** | **128** | **1.0× (Baseline)** |
-| [colqwen3.5-4.5B-v3](https://huggingface.co/athrael-soju/colqwen3.5-4.5B-v3) | 4.60B | 320 | 2.5× |
-| [jina-embeddings-v4](https://huggingface.co/jinaai/jina-embeddings-v4) | 3.90B | 2048 (128 multi-vec) | 1.0× ~ 16.0× |
-| [nemotron-colembed-vl-4b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-4b-v2) | 4.80B | 2560 | 20.0× |
-| [llama-nemotron-colembed-vl-3b-v2](https://huggingface.co/nvidia/llama-nemotron-colembed-vl-3b-v2) | 4.40B | 3072 | 24.0× |
-| [nemotron-colembed-vl-8b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-8b-v2) | 8.77B | 4096 | 32.0× |
+| Model | Parameters | Token Embedding Dim |
+| :--- | :---: | :---: |
+| **EVIE Preview 4.5B** | **4.54B** | **128** |
+| [colqwen3.5-4.5B-v3](https://huggingface.co/athrael-soju/colqwen3.5-4.5B-v3) | 4.60B | 320 |
+| [jina-embeddings-v4](https://huggingface.co/jinaai/jina-embeddings-v4) | 3.90B | 2048 (128 multi-vec) |
+| [nemotron-colembed-vl-4b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-4b-v2) | 4.80B | 2560 |
+| [llama-nemotron-colembed-vl-3b-v2](https://huggingface.co/nvidia/llama-nemotron-colembed-vl-3b-v2) | 4.40B | 3072 |
+| [nemotron-colembed-vl-8b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-8b-v2) | 8.77B | 4096 |
 
 ---
 
@@ -89,21 +89,21 @@ Evaluated across 8 domains with queries spanning 6 languages (EN, FR, DE, IT, PT
 
 ### ViDoRe V1 + V2 (nDCG@5)
 
-| Model | ArxivQA | DocVQA | InfoVQA | ShiftProj | SynAI | SynEnergy | SynGov | SynHealth | Tabfquad | Tatdqa | BioMed | ESGHL | ESG | Econ | **Avg** |
+| Model | **Avg** | ArxivQA | DocVQA | InfoVQA | ShiftProj | SynAI | SynEnergy | SynGov | SynHealth | Tabfquad | Tatdqa | BioMed | ESGHL | ESG | Econ |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **EVIE Preview 4.5B** | 91.5 | 62.9 | 93.0 | **94.0** | **100.0** | **99.0** | **98.9** | 98.9 | **97.5** | 81.6 | **71.0** | **80.1** | **66.3** | **68.3** | **85.9** |
-| Ops-Colqwen3-4B | 91.8 | 66.5 | 94.0 | 90.8 | 99.6 | 97.3 | 98.0 | 99.6 | 93.6 | 82.4 | 65.5 | 78.6 | 66.0 | 64.5 | 84.9 |
-| nemotron-colembed-vl-8b-v2 | 93.1 | 68.1 | 94.6 | 93.3 | 100.0 | 97.9 | 98.9 | 99.6 | 97.7 | 83.4 | 66.2 | 73.2 | 60.6 | 60.8 | 84.8 |
-| nemotron-colembed-vl-4b-v2 | 92.0 | 67.4 | 93.3 | 92.3 | 99.3 | 96.2 | 98.0 | 98.5 | 98.1 | 81.2 | 64.3 | 71.4 | 61.5 | 60.8 | 83.9 |
-| colqwen3.5-4.5B-v3 | 91.9 | 66.6 | 93.6 | 90.2 | 100.0 | 97.1 | 97.3 | 98.9 | 95.9 | 84.0 | 65.3 | 73.8 | 58.0 | 59.9 | 83.7 |
-| llama-nemotron-colembed-vl-3b-v2 | 90.4 | 67.2 | 94.7 | 92.0 | 100.0 | 98.0 | 98.0 | 98.9 | 97.3 | 81.0 | 63.2 | 73.1 | 58.6 | 58.6 | 83.6 |
-| tomoro-colqwen3-embed-8b | 91.2 | 66.4 | 94.5 | 87.9 | 99.3 | 96.7 | 97.6 | 99.1 | 94.2 | 80.9 | 65.5 | 76.0 | 60.7 | 59.5 | 83.5 |
-| EvoQwen2.5-VL-Retriever-7B-v1 | 91.5 | 65.1 | 94.1 | 88.8 | 99.6 | 96.6 | 96.3 | 98.9 | 93.6 | 82.3 | 65.2 | 77.0 | 59.7 | 59.1 | 83.4 |
-| tomoro-colqwen3-embed-4b | 90.6 | 66.3 | 94.3 | 87.4 | 99.3 | 96.9 | 97.2 | 99.6 | 94.3 | 79.9 | 65.4 | 74.6 | 62.4 | 56.3 | 83.2 |
-| llama-nemoretriever-colembed-3b-v1 | 88.4 | 66.2 | 94.9 | 90.7 | 99.6 | 96.6 | 97.8 | 99.3 | 95.9 | 80.6 | 62.7 | 75.4 | 57.4 | 57.8 | 83.1 |
-| SauerkrautLM-ColQwen3-8b-v0.1 | 93.8 | 64.7 | 94.5 | 90.4 | 98.6 | 96.5 | 96.8 | 99.3 | 92.2 | 84.0 | 63.3 | 70.8 | 57.9 | 58.0 | 82.9 |
+| **EVIE Preview 4.5B** | **85.9** | 91.5 | 62.9 | 93.0 | **94.0** | **100.0** | **99.0** | **98.9** | 98.9 | **97.5** | 81.6 | **71.0** | **80.1** | **66.3** | **68.3** |
+| Ops-Colqwen3-4B | 84.9 | 91.8 | 66.5 | 94.0 | 90.8 | 99.6 | 97.3 | 98.0 | 99.6 | 93.6 | 82.4 | 65.5 | 78.6 | 66.0 | 64.5 |
+| nemotron-colembed-vl-8b-v2 | 84.8 | 93.1 | 68.1 | 94.6 | 93.3 | 100.0 | 97.9 | 98.9 | 99.6 | 97.7 | 83.4 | 66.2 | 73.2 | 60.6 | 60.8 |
+| nemotron-colembed-vl-4b-v2 | 83.9 | 92.0 | 67.4 | 93.3 | 92.3 | 99.3 | 96.2 | 98.0 | 98.5 | 98.1 | 81.2 | 64.3 | 71.4 | 61.5 | 60.8 |
+| colqwen3.5-4.5B-v3 | 83.7 | 91.9 | 66.6 | 93.6 | 90.2 | 100.0 | 97.1 | 97.3 | 98.9 | 95.9 | 84.0 | 65.3 | 73.8 | 58.0 | 59.9 |
+| llama-nemotron-colembed-vl-3b-v2 | 83.6 | 90.4 | 67.2 | 94.7 | 92.0 | 100.0 | 98.0 | 98.0 | 98.9 | 97.3 | 81.0 | 63.2 | 73.1 | 58.6 | 58.6 |
+| tomoro-colqwen3-embed-8b | 83.5 | 91.2 | 66.4 | 94.5 | 87.9 | 99.3 | 96.7 | 97.6 | 99.1 | 94.2 | 80.9 | 65.5 | 76.0 | 60.7 | 59.5 |
+| EvoQwen2.5-VL-Retriever-7B-v1 | 83.4 | 91.5 | 65.1 | 94.1 | 88.8 | 99.6 | 96.6 | 96.3 | 98.9 | 93.6 | 82.3 | 65.2 | 77.0 | 59.7 | 59.1 |
+| tomoro-colqwen3-embed-4b | 83.2 | 90.6 | 66.3 | 94.3 | 87.4 | 99.3 | 96.9 | 97.2 | 99.6 | 94.3 | 79.9 | 65.4 | 74.6 | 62.4 | 56.3 |
+| llama-nemoretriever-colembed-3b-v1 | 83.1 | 88.4 | 66.2 | 94.9 | 90.7 | 99.6 | 96.6 | 97.8 | 99.3 | 95.9 | 80.6 | 62.7 | 75.4 | 57.4 | 57.8 |
+| SauerkrautLM-ColQwen3-8b-v0.1 | 82.9 | 93.8 | 64.7 | 94.5 | 90.4 | 98.6 | 96.5 | 96.8 | 99.3 | 92.2 | 84.0 | 63.3 | 70.8 | 57.9 | 58.0 |
 
-*Columns 1–10: ViDoRe V1 (10 tasks). Columns 11–14: ViDoRe V2 (4 tasks). `Avg`: Unweighted mean across all 14 tasks.*
+*`Avg`: Unweighted mean across all 14 tasks. Tasks 1–10: ViDoRe V1. Tasks 11–14: ViDoRe V2.*
 
 ---
 
