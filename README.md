@@ -9,8 +9,10 @@
 [![Embedding Dim](https://img.shields.io/badge/Token%20Dim-128%20(Native)-success.svg)](#model-footprint)
 [![ViDoRe V3](https://img.shields.io/badge/ViDoRe%20V3-64.40%20(Rank%20%231)-gold.svg)](#vidore-v3-8-public-domains-ndcg10)
 [![Framework](https://img.shields.io/badge/Framework-ColPali--Engine-orange.svg)](https://github.com/illuin-tech/colpali)
+[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Model-FFD21E.svg)](https://huggingface.co/tencent/EVIE-Preview-4.5B)
+[![GitHub](https://img.shields.io/badge/GitHub-Source-181717.svg)](https://github.com/Tencent/EVIE-Preview-4.5B)
 
-[Overview](#overview) • [Benchmark Results](#benchmark-results) • [Quick Start](#quick-start) • [Reproducing](#reproducing) • [Training Data](#training-data) • [Acknowledgements](#acknowledgements)
+[Overview](#overview) • [Benchmark Results](#benchmark-results) • [Quick Start](#quick-start) • [Reproducing](#reproducing) • [Training Data](#training-data) • [Citation](#citation)
 
 </div>
 
@@ -187,3 +189,17 @@ EVIE was trained on approximately **0.8 million high-quality image-query pairs**
 - Built upon the [ColPali Engine](https://github.com/illuin-tech/colpali) developed by Illuin Technology.
 - Powered by the [Qwen3.5-4B](https://huggingface.co/Qwen/Qwen3.5-4B) vision-language backbone.
 - Evaluated on the [ViDoRe Benchmark](https://huggingface.co/vidore) family.
+
+---
+
+## Citation
+
+```bibtex
+@misc{tencent2026evie,
+  title        = {EVIE-Preview-4.5B},
+  author       = {{Tencent}},
+  year         = {2026},
+  howpublished = {\url{https://huggingface.co/tencent/EVIE-Preview-4.5B}},
+  note         = {Multilingual visual document retrieval with compact multi-vector embeddings}
+}
+```
