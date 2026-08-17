@@ -4,7 +4,7 @@
 
 **Next-Generation Multilingual Visual Document Retrieval with Ultra-Compact Token Embeddings**
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
 [![Base Model](https://img.shields.io/badge/Base%20Model-Qwen3.5--4B-purple.svg)](https://huggingface.co/Qwen/Qwen3.5-4B)
 [![Embedding Dim](https://img.shields.io/badge/Token%20Dim-128%20(Native)-success.svg)](#model-footprint)
 [![ViDoRe V3](https://img.shields.io/badge/ViDoRe%20V3-64.40%20(Rank%20%231)-gold.svg)](#vidore-v3-8-public-domains-ndcg10)
