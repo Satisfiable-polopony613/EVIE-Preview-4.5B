@@ -1,6 +1,6 @@
 <div align="center">
 
-# EVIE Preview 4.5B
+# EVIE-Preview-4.5B
 
 **Next-Generation Multilingual Visual Document Retrieval with Ultra-Compact Token Embeddings**
 
@@ -18,7 +18,7 @@
 
 ## Overview
 
-**EVIE Preview 4.5B** is a high-performance multilingual Visual Document Retrieval (VDR) model built upon **Qwen3.5-4B**. It employs ColBERT-style late interaction with native **128-dimensional** token embeddings (4.54B parameters, BF16).
+**EVIE-Preview-4.5B** is a high-performance multilingual Visual Document Retrieval (VDR) model built upon **Qwen3.5-4B**. It employs ColBERT-style late interaction with native **128-dimensional** token embeddings (4.54B parameters, BF16).
 
 By combining native GatedDeltaNet + full-attention hybrid modeling with a compact projection, EVIE achieves top-tier performance across ViDoRe V1+V2 and ViDoRe V3 while producing native 128-dimensional multi-vector representations instead of the 2560D–4096D representations used by wider multi-vector alternatives.
 
@@ -39,7 +39,7 @@ By combining native GatedDeltaNet + full-attention hybrid modeling with a compac
 
 | Model | Parameters | Token Embedding Dim |
 | :--- | :---: | :---: |
-| **EVIE Preview 4.5B** | **4.54B** | **128** |
+| **EVIE-Preview-4.5B** | **4.54B** | **128** |
 | [colqwen3.5-4.5B-v3](https://huggingface.co/athrael-soju/colqwen3.5-4.5B-v3) | 4.60B | 320 |
 | [jina-embeddings-v4](https://huggingface.co/jinaai/jina-embeddings-v4) | 3.90B | 2048 (128 multi-vec) |
 | [nemotron-colembed-vl-4b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-4b-v2) | 4.80B | 2560 |
@@ -54,7 +54,7 @@ Evaluated across 8 domains with queries spanning 6 languages (EN, FR, DE, IT, PT
 
 | Model | **Avg** | CompSci | Energy | Finance (EN) | Finance (FR) | HR | Industrial | Pharma | Physics |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **EVIE Preview 4.5B** | **64.40** | **80.33** | **71.45** | **67.68** | **53.01** | 65.65 | **57.48** | **68.66** | **50.96** |
+| **EVIE-Preview-4.5B** | **64.40** | **80.33** | **71.45** | **67.68** | **53.01** | 65.65 | **57.48** | **68.66** | **50.96** |
 | nemotron-colembed-vl-8b-v2 | 63.54 | 79.30 | 69.82 | 67.29 | 51.54 | **66.32** | 56.03 | 67.19 | 50.84 |
 | tomoro-colqwen3-embed-8b | 61.60 | 75.35 | 68.41 | 65.08 | 49.10 | 63.98 | 54.41 | 66.36 | 50.13 |
 | nemotron-colembed-vl-4b-v2 | 61.42 | 78.56 | 67.48 | 65.02 | 49.01 | 62.39 | 53.91 | 66.10 | 48.86 |
@@ -71,7 +71,7 @@ Evaluated across 8 domains with queries spanning 6 languages (EN, FR, DE, IT, PT
 
 | Model | **Avg** | ArxivQA | DocVQA | InfoVQA | ShiftProj | SynAI | SynEnergy | SynGov | SynHealth | Tabfquad | Tatdqa | BioMed | ESGHL | ESG | Econ |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **EVIE Preview 4.5B** | **85.9** | 91.5 | 62.9 | 93.0 | **94.0** | **100.0** | **99.0** | **98.9** | 98.9 | **97.5** | 81.6 | **71.0** | **80.1** | **66.3** | **68.3** |
+| **EVIE-Preview-4.5B** | **85.9** | 91.5 | 62.9 | 93.0 | **94.0** | **100.0** | **99.0** | **98.9** | 98.9 | **97.5** | 81.6 | **71.0** | **80.1** | **66.3** | **68.3** |
 | Ops-Colqwen3-4B | 84.9 | 91.8 | 66.5 | 94.0 | 90.8 | 99.6 | 97.3 | 98.0 | 99.6 | 93.6 | 82.4 | 65.5 | 78.6 | 66.0 | 64.5 |
 | nemotron-colembed-vl-8b-v2 | 84.8 | 93.1 | 68.1 | 94.6 | 93.3 | 100.0 | 97.9 | 98.9 | 99.6 | 97.7 | 83.4 | 66.2 | 73.2 | 60.6 | 60.8 |
 | nemotron-colembed-vl-4b-v2 | 83.9 | 92.0 | 67.4 | 93.3 | 92.3 | 99.3 | 96.2 | 98.0 | 98.5 | 98.1 | 81.2 | 64.3 | 71.4 | 61.5 | 60.8 |

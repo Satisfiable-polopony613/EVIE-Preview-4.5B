@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Score document page images against a text query with EVIE Preview 4.5B."""
+"""Score document page images against a text query with EVIE-Preview-4.5B."""
 
 import argparse
 
