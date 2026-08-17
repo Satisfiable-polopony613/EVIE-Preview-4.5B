@@ -98,7 +98,7 @@ Document Image ─────► ColQwen3_5 (Dynamic Vision) ──► Doc Toke
 | [llama-nemotron-colembed-vl-3b-v2](https://huggingface.co/nvidia/llama-nemotron-colembed-vl-3b-v2) | Multi-vector | 3072 | 24× |
 | [nemotron-colembed-vl-8b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-8b-v2) | Multi-vector | 4096 | 32× |
 
-*Relative width compares the native uncompressed width of one token vector with EVIE's 128D output. It is not a total index-size comparison: total storage also depends on vectors per page, data precision, projection or compression settings, and index overhead. NVIDIA ColEmbed models also support 128D projected outputs, while Jina v4 separately supports a 2048D single-vector mode.*
+*Relative width compares the native uncompressed width of one token vector with EVIE's 128D output. It is not a total index-size comparison: total storage also depends on vectors per page, data precision, projection or compression settings, and index overhead.*
 
 ---
 
