@@ -1,23 +1,3 @@
----
-license: apache-2.0
-license_link: LICENSE
-library_name: colpali
-pipeline_tag: visual-document-retrieval
-base_model:
-  - Qwen/Qwen3.5-4B
-tags:
-  - visual-document-retrieval
-  - colpali
-  - colbert
-  - late-interaction
-  - multi-vector
-  - qwen3_5
-  - multilingual
-  - safetensors
-language:
-  - multilingual
----
-
 <div align="center">
 
 # EVIE Preview 4.5B
