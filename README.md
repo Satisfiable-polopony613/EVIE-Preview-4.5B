@@ -89,14 +89,14 @@ Document Image ─────► ColQwen3_5 (Dynamic Vision) ──► Doc Toke
 
 ### Model Footprint
 
-| Model | Representation | Native Uncompressed Dim / Vector | Relative Width / Vector |
-| :--- | :---: | :---: | :---: |
-| **EVIE-Preview-4.5B** | Multi-vector | **128** | **1.0×** |
-| [colqwen3.5-4.5B-v3](https://huggingface.co/athrael-soju/colqwen3.5-4.5B-v3) | Multi-vector | 320 | 2.5× |
-| [jina-embeddings-v4](https://huggingface.co/jinaai/jina-embeddings-v4) | Multi-vector | 128 | 1.0× |
-| [nemotron-colembed-vl-4b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-4b-v2) | Multi-vector | 2560 | 20× |
-| [llama-nemotron-colembed-vl-3b-v2](https://huggingface.co/nvidia/llama-nemotron-colembed-vl-3b-v2) | Multi-vector | 3072 | 24× |
-| [nemotron-colembed-vl-8b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-8b-v2) | Multi-vector | 4096 | 32× |
+| Model | Native Uncompressed Dim / Vector | Relative Width / Vector |
+| :--- | :---: | :---: |
+| **EVIE-Preview-4.5B** | **128** | **1.0×** |
+| [colqwen3.5-4.5B-v3](https://huggingface.co/athrael-soju/colqwen3.5-4.5B-v3) | 320 | 2.5× |
+| [jina-embeddings-v4](https://huggingface.co/jinaai/jina-embeddings-v4) | 128 | 1.0× |
+| [nemotron-colembed-vl-4b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-4b-v2) | 2560 | 20× |
+| [llama-nemotron-colembed-vl-3b-v2](https://huggingface.co/nvidia/llama-nemotron-colembed-vl-3b-v2) | 3072 | 24× |
+| [nemotron-colembed-vl-8b-v2](https://huggingface.co/nvidia/nemotron-colembed-vl-8b-v2) | 4096 | 32× |
 
 *Relative width compares the native uncompressed width of one token vector with EVIE's 128D output. It is not a total index-size comparison: total storage also depends on vectors per page, data precision, projection or compression settings, and index overhead.*
 
